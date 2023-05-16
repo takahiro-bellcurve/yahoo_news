@@ -35,6 +35,7 @@ class YahooNewsSpider(CrawlSpider):
 
     def parse_item(self, response):
         try:
+            id = response.url.split('/')[-1]
             title = response.xpath('//head/title/text()').get().replace(' - Yahoo!ニュース', '')
             body_excerpt = response.xpath('//p[contains(@class,"highLightSearchTarget")]').get()
             if body_excerpt:
@@ -51,12 +52,10 @@ class YahooNewsSpider(CrawlSpider):
                 f.write(f'{traceback.format_exc()}')
 
         yield {
+            'id': id,
             'title': title,
             'body': formatted_body,
             'link': link,
             'comment_count': comment_count,
         }
-# comment
-# https://news.yahoo.co.jp/api/public/comment-digest/8c00198b44b8668290298ba7725ceff254ceb1a7
-
-# //a[contains(@class, "sc-imSsaf")]/@href
+        
