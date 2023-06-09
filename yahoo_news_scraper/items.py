@@ -7,6 +7,8 @@ import scrapy
 
 
 class YahooNewsScraperItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+    id = scrapy.Field()
+    title = scrapy.Field()
+    body = scrapy.Field()
+    link = scrapy.Field()
+    comment_count = scrapy.Field()
