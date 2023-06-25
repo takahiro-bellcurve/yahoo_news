@@ -1,6 +1,5 @@
 import re
 import datetime
-import os
 import pathlib
 import traceback
 
@@ -43,10 +42,11 @@ class YahooNewsSpider(CrawlSpider):
     def parse_item(self, response):
         loader = ItemLoader(item=YahooNewsScraperItem(), response=response)
         try:
-            # href="https://news.yahoo.co.jp/articles/45c95a64146d9896e0c234344eb09188d59588e5/images/000"
+            # https://news.yahoo.co.jp/articles/b6d61ce22e023bafd417e18278bfe9cf9976736d
             href_contain_id = response.xpath(
-                '//p[contains(@class,"sc-fOwylK")]/a/@href')
-            id = re.search(r'articles/(.*?)/', href_contain_id.get()).group(1)
+                '//p[contains(@class,"sc-JnCVy")]/a/@href').get()
+            print(href_contain_id)
+            id = re.search(r'articles/(.*?)$', href_contain_id).group(1)
 
             title = response.xpath(
                 '//head/title/text()').get().replace(' - Yahoo!ニュース', '')
@@ -61,7 +61,7 @@ class YahooNewsSpider(CrawlSpider):
             comment_count = response.xpath(
                 '//span[contains(@class, "sc-jaowzm")]/text()').get()
         except Exception as e:
-            with open(f"./yahoo_news_scraper/error_log/{self.spider_opened_date}.log", mode='a') as f:
+            with open(f"./error_log/{self.spider_opened_date}.log", mode='a') as f:
                 f.write(f'{response.url}\n')
                 f.write(f'message: {e}\n')
                 f.write(f'{traceback.format_exc()}')
